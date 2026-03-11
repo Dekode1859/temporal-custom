@@ -41,6 +41,7 @@ services:
       - ES_PORT=9200
       - ES_SCHEME=http
       - ES_VERSION=v7
+      - TEMPORAL_BROADCAST_ADDRESS=192.168.1.55
       - ES_VISIBILITY_INDEX=temporal_visibility_v1_dev
     networks:
       - temporal-network
@@ -113,7 +114,7 @@ services:
     networks:
       - temporal-network
     ports:
-      - 8233:8080
+      - 8080:8080
 
 networks:
   temporal-network:
