@@ -109,7 +109,7 @@ services:
         condition: service_healthy
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000,http://192.168.1.55:8080
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
       - temporal-network
