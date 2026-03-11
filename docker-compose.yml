@@ -70,6 +70,7 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - BIND_ON_IP=0.0.0.0
+      - TEMPORAL_BROADCAST_ADDRESS=temporal
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     networks:
       - temporal-network
