@@ -69,7 +69,6 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-      - BIND_ON_IP=0.0.0.0
       - TEMPORAL_BROADCAST_ADDRESS=192.168.1.55
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     networks:
@@ -114,7 +113,7 @@ services:
     networks:
       - temporal-network
     ports:
-      - 8080:8080
+      - 8233:8080
 
 networks:
   temporal-network:
