@@ -9,10 +9,10 @@ nc -z -w 10 $(echo $TEMPORAL_ADDRESS | cut -d: -f1) $(echo $TEMPORAL_ADDRESS | c
 echo 'Temporal server port is available'
 
 echo 'Waiting for Temporal server to be healthy...'
-max_attempts=30
+max_attempts=3
 attempt=0
 
-until temporal operator cluster health --address $TEMPORAL_ADDRESS 2>/dev/null | grep -q "SERVING"; do
+until temporal operator cluster health --address $TEMPORAL_ADDRESS; do
   attempt=$((attempt + 1))
   if [ $attempt -ge $max_attempts ]; then
     echo "Server did not become healthy after $max_attempts attempts"
@@ -23,6 +23,5 @@ until temporal operator cluster health --address $TEMPORAL_ADDRESS 2>/dev/null |
 done
 
 echo "Server is healthy, creating namespace '$NAMESPACE'..."
-# Use new CLI syntax: namespace name as argument, not -n flag
-temporal operator namespace describe $NAMESPACE --address $TEMPORAL_ADDRESS 2>/dev/null || temporal operator namespace create $NAMESPACE --address $TEMPORAL_ADDRESS
+temporal operator namespace describe -n $NAMESPACE --address $TEMPORAL_ADDRESS || temporal operator namespace create -n $NAMESPACE --address $TEMPORAL_ADDRESS
 echo "Namespace '$NAMESPACE' created"
