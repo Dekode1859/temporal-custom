@@ -23,5 +23,6 @@ until temporal operator cluster health --address $TEMPORAL_ADDRESS; do
 done
 
 echo "Server is healthy, creating namespace '$NAMESPACE'..."
-temporal operator namespace describe -n $NAMESPACE --address $TEMPORAL_ADDRESS || temporal operator namespace create -n $NAMESPACE --address $TEMPORAL_ADDRESS
+temporal operator namespace describe $NAMESPACE --address $TEMPORAL_ADDRESS || temporal operator namespace create $NAMESPACE --address $TEMPORAL_ADDRESS
+
 echo "Namespace '$NAMESPACE' created"

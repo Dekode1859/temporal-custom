@@ -29,7 +29,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PWD=postgres
       - POSTGRES_SEEDS=192.168.1.15
+      - SQL_HOST=192.168.1.15
+      - SQL_PORT=5432
+      - SQL_USER=postgres
+      - SQL_PASSWORD=postgres
+      - SQL_DATABASE=temporal
+      - SQL_VISIBILITY_DB=temporal_visibility
+      - SQL_MAX_CONNS=10          # Limit connections
+      - SQL_MAX_IDLE_CONNS=5
       - BIND_ON_IP=0.0.0.0
+      - TEMPORAL_BROADCAST_ADDRESS=127.0.0.1
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     networks:
       - temporal-network
@@ -38,7 +47,7 @@ services:
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "7233"]
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 7233 || nc -z localhost 7233"]
       interval: 5s
       timeout: 3s
       start_period: 30s
