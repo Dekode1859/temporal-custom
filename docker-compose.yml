@@ -1,33 +1,8 @@
 services:
-  elasticsearch:
-    image: elasticsearch:${ELASTICSEARCH_VERSION}
-    container_name: temporal-elasticsearch
-    ports:
-      - "9200:9200"
-    environment:
-      - cluster.routing.allocation.disk.threshold_enabled=true
-      - cluster.routing.allocation.disk.watermark.low=512mb
-      - cluster.routing.allocation.disk.watermark.high=256mb
-      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m
-      - xpack.security.enabled=false
-    networks:
-      - temporal-network
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 60
-      start_period: 30s
-
   temporal-admin-tools:
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
     container_name: temporal-admin-tools
     restart: on-failure:6
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
     environment:
       - DB=postgres12
       - DB_PORT=5432
@@ -35,17 +10,12 @@ services:
       - POSTGRES_PWD=postgres
       - POSTGRES_SEEDS=192.168.1.15
       - SQL_PASSWORD=postgres
-      - ES_HOST=elasticsearch
-      - ES_PORT=9200
-      - ES_SCHEME=http
-      - ES_VERSION=v7
-      - ES_VISIBILITY_INDEX=temporal_visibility_v1_dev
     networks:
       - temporal-network
     volumes:
       - ./scripts:/scripts
     entrypoint: ["/bin/sh"]
-    command: /scripts/setup-postgres-es.sh
+    command: /scripts/setup-postgres.sh
 
   temporal:
     image: temporalio/server:${TEMPORAL_VERSION}
@@ -59,9 +29,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PWD=postgres
       - POSTGRES_SEEDS=192.168.1.15
-      - ENABLE_ES=true
-      - ES_SEEDS=elasticsearch
-      - ES_VERSION=v7
       - BIND_ON_IP=0.0.0.0
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     networks:
